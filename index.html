@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f7f4">
+  <title>Budget Planner</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Pennywise home">
+        <span class="brand-mark" aria-hidden="true">₹</span>
+        <span>Pennywise</span>
+      </a>
+      <div class="account-actions">
+        <p id="accountEmail" class="privacy-note"></p>
+        <button id="logoutButton" class="sign-out-button" type="button" hidden>Sign out</button>
+      </div>
+    </header>
+
+    <section id="authSection" class="auth-section" aria-labelledby="authTitle">
+      <div class="auth-intro">
+        <p class="eyebrow">YOUR MONEY, YOUR ACCOUNT</p>
+        <h1 id="authTitle">Welcome back.</h1>
+        <p class="subtitle">Sign in to see your saved budget, or create an account to get started.</p>
+      </div>
+      <form id="authForm" class="panel auth-panel">
+        <label for="authEmail">Email address</label>
+        <input id="authEmail" name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com" required>
+        <label for="authPassword">Password</label>
+        <div class="password-input-wrap">
+          <input id="authPassword" name="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" placeholder="At least 8 characters" required>
+          <button class="password-toggle" id="passwordToggle" type="button" aria-label="Show password" aria-pressed="false">Show</button>
+        </div>
+        <div id="confirmPasswordField" hidden>
+          <label for="confirmPassword">Confirm password</label>
+          <div class="password-input-wrap">
+            <input id="confirmPassword" name="confirmPassword" type="password" minlength="8" maxlength="128" autocomplete="new-password">
+            <button class="password-toggle" id="confirmPasswordToggle" type="button" aria-label="Show password" aria-pressed="false">Show</button>
+          </div>
+        </div>
+        <p id="authMessage" class="message" role="status" aria-live="polite" hidden></p>
+        <button id="authSubmit" class="button button-primary" type="submit">Sign in</button>
+        <p class="auth-switch"><span id="authSwitchPrompt">New to Pennywise?</span> <button id="authSwitch" type="button">Create an account</button></p>
+      </form>
+    </section>
+
+    <div id="accountContent" hidden>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">YOUR MONEY, MADE CLEAR</p>
+        <h1 id="page-title">A little more in control.</h1>
+        <p class="subtitle">Keep an eye on your spending and make room for what matters.</p>
+      </div>
+      <label class="month-picker" for="month">
+        <span>Viewing month</span>
+        <input id="month" type="month">
+      </label>
+    </section>
+
+    <p id="appMessage" class="message" role="status" aria-live="polite" hidden></p>
+
+    <section class="summary-grid" aria-label="Monthly budget summary">
+      <article class="summary-card balance-card">
+        <div class="card-heading"><span>Available to spend</span><span class="card-icon" aria-hidden="true">↗</span></div>
+        <p id="available" class="card-amount">₹0</p>
+        <p id="availableHint" class="card-hint">After your savings target</p>
+      </article>
+      <article class="summary-card">
+        <div class="card-heading"><span>Monthly income</span><span class="card-icon income-icon" aria-hidden="true">＋</span></div>
+        <p id="incomeSummary" class="card-amount">₹0</p>
+        <p class="card-hint">Your planned income</p>
+      </article>
+      <article class="summary-card">
+        <div class="card-heading"><span>Spent this month</span><span class="card-icon expense-icon" aria-hidden="true">↘</span></div>
+        <p id="spentSummary" class="card-amount">₹0</p>
+        <p id="spentHint" class="card-hint">No expenses logged yet</p>
+      </article>
+      <article class="summary-card">
+        <div class="card-heading"><span>Savings target</span><span class="card-icon savings-icon" aria-hidden="true">✳</span></div>
+        <p id="targetSummary" class="card-amount">₹0</p>
+        <p id="savingsHint" class="card-hint">Set a goal that feels right</p>
+      </article>
+    </section>
+
+    <div class="content-grid">
+      <section class="panel plan-panel" aria-labelledby="plan-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">START WITH A PLAN</p>
+            <h2 id="plan-title">Your monthly plan</h2>
+          </div>
+        </div>
+        <form id="planForm" class="plan-form">
+          <label for="income">Monthly income <span>(₹)</span></label>
+          <div class="input-wrap"><span aria-hidden="true">₹</span><input id="income" name="income" type="number" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 50,000" required></div>
+          <label for="target">Savings target <span>(₹)</span></label>
+          <div class="input-wrap"><span aria-hidden="true">₹</span><input id="target" name="target" type="number" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 5,000" required></div>
+          <button class="button button-dark" type="submit">Save monthly plan</button>
+        </form>
+        <div class="budget-progress">
+          <div class="progress-label"><span>Income spent</span><strong id="progressPercent">0%</strong></div>
+          <div class="progress-track" role="progressbar" aria-label="Monthly income spent" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressTrack">
+            <span id="progressBar"></span>
+          </div>
+          <p id="progressHint">Add your income to see your spending progress.</p>
+        </div>
+      </section>
+
+      <section class="panel expense-panel" aria-labelledby="expense-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">KEEP IT UP TO DATE</p>
+            <h2 id="expense-title">Add an expense</h2>
+          </div>
+        </div>
+        <form id="expenseForm" class="expense-form">
+          <label for="description">What did you spend on?</label>
+          <input id="description" name="description" maxlength="60" placeholder="e.g. Weekly groceries" required>
+          <div class="form-row">
+            <div>
+              <label for="amount">Amount <span>(₹)</span></label>
+              <div class="input-wrap"><span aria-hidden="true">₹</span><input id="amount" name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00" required></div>
+            </div>
+            <div>
+              <label for="category">Category</label>
+              <select id="category" name="category">
+                <option>Food</option>
+                <option>Housing</option>
+                <option>Transport</option>
+                <option>Utilities</option>
+                <option>Health</option>
+                <option>Shopping</option>
+                <option>Entertainment</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <label for="date">Date</label>
+          <input id="date" name="date" type="date" required>
+          <button class="button button-primary" type="submit"><span aria-hidden="true">＋</span> Add expense</button>
+        </form>
+      </section>
+
+      <section class="panel breakdown-panel" aria-labelledby="breakdown-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">WHERE IT GOES</p>
+            <h2 id="breakdown-title">Spending by category</h2>
+          </div>
+        </div>
+        <div id="categoryBreakdown" class="category-list">
+          <p class="empty-state">Your category breakdown will show up here.</p>
+        </div>
+      </section>
+
+      <section class="panel transactions-panel" aria-labelledby="transactions-title">
+        <div class="section-heading transactions-heading">
+          <div>
+            <p class="eyebrow">THE DETAILS</p>
+            <h2 id="transactions-title">Recent expenses</h2>
+          </div>
+          <span id="expenseCount" class="count-badge">0 items</span>
+        </div>
+        <div class="transaction-list-wrap">
+          <ul id="transactionList" class="transaction-list" aria-live="polite">
+            <li class="empty-state">No expenses for this month yet. Add one above to get started.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <footer><span class="footer-mark" aria-hidden="true">✳</span> Small steps add up. You’ve got this.</footer>
+    </div>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
